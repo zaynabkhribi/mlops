@@ -1,4 +1,4 @@
-artifact_path: file:C:/Users/GFI/mlops/tp1/mlruns/1/models/m-b20113f8ec2d4d5880111a53c547c09e/artifacts
+artifact_path: file:C:/Users/GFI/mlops/tp1/mlruns/1/models/m-50f99caa8b154b59a3789724a0e58f9a/artifacts
 flavors:
   python_function:
     env:
@@ -14,10 +14,10 @@ flavors:
     serialization_format: cloudpickle
     sklearn_version: 1.9.1
     skops_trusted_types: null
-mlflow_version: 3.17.1
-model_id: m-b20113f8ec2d4d5880111a53c547c09e
+mlflow_version: 3.17.2
+model_id: m-50f99caa8b154b59a3789724a0e58f9a
 model_size_bytes: 163234
-model_uuid: m-b20113f8ec2d4d5880111a53c547c09e
+model_uuid: m-50f99caa8b154b59a3789724a0e58f9a
 prompts: null
-run_id: 769a7b4cd27e4c45a259788fe2795ac4
-utc_time_created: '2026-10-20 10:39:31.603299'
+run_id: cf80b37e187647268cbca41a51e3e1bb
+utc_time_created: '2026-10-27 10:39:16.150232'
