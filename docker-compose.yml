@@ -1,0 +1,56 @@
+
+# Deux services : le serveur MLflow et notre API
+
+services:
+
+  # ----- Service 1 : le serveur MLflow (Tracking + Registry) -----
+  mlflow:
+    # Image officielle, téléchargée depuis le registre GHCR
+    image: ghcr.io/mlflow/mlflow:v3.17.1
+
+    # Commande de démarrage du serveur
+    # --host 0.0.0.0 : joignable par les autres conteneurs
+    # --backend-store-uri : base SQLite des runs et du Registry
+    # --artifacts-destination : dossier où sont stockés les modèles
+    # --allowed-hosts : noms d'hôte acceptés (sinon erreur 403)
+    command: >
+      mlflow server --host 0.0.0.0 --port 5000
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --artifacts-destination /mlflow/artifacts
+      --allowed-hosts mlflow:5000,localhost:5000
+
+    # Interface MLflow accessible sur http://localhost:5000
+    ports:
+      - "5000:5000"
+
+    # Volume : le dossier /mlflow survit à la suppression du conteneur
+    volumes:
+      - mlflow-data:/mlflow
+
+  # ----- Service 2 : notre API -----
+  api:
+    # Construire l'image avec le Dockerfile du dossier courant
+    build: .
+
+    ports:
+      - "8000:8000"
+
+    # Configuration lue par app.py
+    environment:
+      # Le nom du service sert d'adresse sur le réseau Compose
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+
+      # Charger le champion du Registry
+      # (remplace la valeur ENV du Dockerfile)
+      MODEL_URI: "models:/churn-model@champion"
+
+    # Démarrer MLflow avant l'API
+    depends_on:
+      - mlflow
+
+    # Relancer l'API si elle s'arrête sur une erreur
+    restart: on-failure
+
+# Déclaration du volume nommé utilisé par MLflow
+volumes:
+  mlflow-data:
